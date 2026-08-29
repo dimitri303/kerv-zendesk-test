@@ -29,6 +29,10 @@ npm run lint       # oxlint
 - **Guitar**: enter a fret per string (tuning, capo, and custom tunings supported) and see
   the sounding notes plus the most likely chord name(s), including inversions, slash chords,
   and incomplete voicings.
+- **"chart" buttons**: any chord symbol shown anywhere (the progression, next-chord
+  suggestions) has a "chart" toggle that finds a playable fret shape for it in the project's
+  *current* tuning and capo - including alternate/custom tunings like Open G, where the usual
+  memorised shapes don't apply.
 - **Progression builder**: sections (Intro/Verse/Chorus/...) of chords, editable, reorderable,
   entered by typing a chord name or from the Guitar tab.
 - **Next Chord**: rule-based "where can this go next?" suggestions grouped Conventional /
@@ -53,7 +57,7 @@ next-chord suggestion rules, voice leading, and the "alter the feel" transformat
 
 ## Tests
 
-`npm run test` runs the Vitest suite (80+ tests) covering tuning/capo pitch math, chord
+`npm run test` runs the Vitest suite (85+ tests) covering tuning/capo pitch math, chord
 detection (including incomplete voicings and slash chords), scale/mode generation, roman
 numeral analysis, key-finding, next-chord suggestions, transformations, melody harmonisation,
-and project storage.
+chord-voicing search, and project storage.

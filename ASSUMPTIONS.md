@@ -3,6 +3,19 @@
 Places where the spec was ambiguous or underspecified and a simplest-reasonable-version
 call was made rather than guessing silently or over-building.
 
+## Chord-voicing search ("chart" buttons)
+
+Added after initial delivery: a user testing in Open G tuning found the Next Chord tab told
+them what to play but not how, since standard-tuning chord shapes don't transfer to alternate
+tunings. `src/theory/voicingFinder.ts` searches for a playable fret shape for any chord
+symbol, in the project's actual current tuning/capo, via a pruned backtracking search over
+real open-string pitches rather than a shape lookup table (which couldn't work for arbitrary
+custom tunings anyway). It's a heuristic, not exhaustive: it searches a bounded fret window
+(starting narrow/open-position-friendly, widening once if nothing turns up), caps the
+fret-to-fret stretch at 4 frets for playability, and scores results by fullness, root/bass
+presence, and neck position. It can occasionally miss an unusual but technically playable
+voicing outside those bounds, or return no shape at all for an oddly-chosen custom tuning.
+
 ## Roman numeral convention
 
 Every roman numeral in the app (diatonic, borrowed, secondary dominant, chromatic mediant...)

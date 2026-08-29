@@ -5,6 +5,7 @@ import {
   addChordToSection, addSection, moveChord, moveSection,
   newChord, removeChord, removeSection, renameSection, updateChordSymbol,
 } from "../models/projectOps";
+import ChordVoicings from "./ChordVoicings";
 
 interface Props {
   project: Project;
@@ -60,6 +61,7 @@ export default function ProgressionView({ project, setProject }: Props) {
                   onChange={(e) => setProject(updateChordSymbol(project, section.id, chord.id, e.target.value))}
                   style={{ width: `${Math.max(3, chord.symbol.length + 1)}ch`, border: "none", background: "transparent", padding: 0 }}
                 />
+                <ChordVoicings symbol={chord.symbol} tuning={project.tuning} capo={project.capo} />
                 <button
                   disabled={cIndex === 0}
                   onClick={() => setProject(moveChord(project, section.id, cIndex, cIndex - 1))}

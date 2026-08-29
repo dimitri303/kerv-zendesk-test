@@ -3,6 +3,7 @@ import type { Project, FretValue, ChordDisplayPreference } from "../models/types
 import { soundingNotes, emptyShape } from "../theory/guitar";
 import { detectChord } from "../theory/chordDetection";
 import { addChordToLastSection } from "../models/projectOps";
+import ChordChart from "../components/ChordChart";
 
 interface Props {
   project: Project;
@@ -81,22 +82,7 @@ export default function GuitarTab({ project, setProject }: Props) {
       </div>
 
       {(pref === "shape" || pref === "both") && (
-        <table style={{ maxWidth: "30rem" }}>
-          <tbody>
-            <tr>
-              <th>String</th>
-              {project.tuning.strings.map((s, i) => <td key={i}>{s}</td>)}
-            </tr>
-            <tr>
-              <th>Fret</th>
-              {frets.map((f, i) => <td key={i}>{f}</td>)}
-            </tr>
-            <tr>
-              <th>Sounds as</th>
-              {sounding.map((n, i) => <td key={i}>{n.note ?? "-"}</td>)}
-            </tr>
-          </tbody>
-        </table>
+        <ChordChart shape={shape} tuning={project.tuning} capo={project.capo} />
       )}
 
       {(pref === "sounding" || pref === "both") && notes.length > 0 && (

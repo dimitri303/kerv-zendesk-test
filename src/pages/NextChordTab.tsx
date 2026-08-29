@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Chord } from "tonal";
-import type { Project, ExplanationLevel } from "../models/types";
+import type { Project, ExplanationLevel, Tuning } from "../models/types";
 import type { ActiveKey } from "../App";
 import {
   suggestNextChords, chordsContainingNote, slashChordsOverBass,
@@ -8,6 +8,7 @@ import {
 } from "../theory/suggestions";
 import { lastChordSymbol, addChordToLastSection } from "../models/projectOps";
 import { explanationFor } from "../models/explanation";
+import ChordVoicings from "../components/ChordVoicings";
 
 interface Props {
   project: Project;
@@ -18,7 +19,9 @@ interface Props {
 const TIER_ORDER: AdventureTier[] = ["conventional", "colourful", "adventurous", "what-the-hell"];
 const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
-function SuggestionList({ items, level, onAdd }: { items: ChordSuggestion[]; level: ExplanationLevel; onAdd: (s: string) => void }) {
+function SuggestionList({
+  items, level, onAdd, tuning, capo,
+}: { items: ChordSuggestion[]; level: ExplanationLevel; onAdd: (s: string) => void; tuning: Tuning; capo: number }) {
   if (items.length === 0) return <p className="muted">(none)</p>;
   return (
     <ul>
@@ -27,6 +30,7 @@ function SuggestionList({ items, level, onAdd }: { items: ChordSuggestion[]; lev
         return (
           <li key={`${s.symbol}-${i}`}>
             <button onClick={() => onAdd(s.symbol)}>{s.symbol}</button>{" "}
+            <ChordVoicings symbol={s.symbol} tuning={tuning} capo={capo} />{" "}
             <span className="tag">{s.technique}</span>
             {explanation && <div className="muted">{explanation}</div>}
           </li>
@@ -61,6 +65,7 @@ export default function NextChordTab({ project, setProject, activeKey }: Props) 
           Current chord:
           <input value={currentChord} onChange={(e) => setCurrentChord(e.target.value)} style={{ width: "6rem" }} />
         </label>
+        {valid && <ChordVoicings symbol={currentChord} tuning={project.tuning} capo={project.capo} />}
         <label>
           Adventure level:
           <select value={maxTier} onChange={(e) => setMaxTier(e.target.value as AdventureTier)}>
@@ -78,6 +83,8 @@ export default function NextChordTab({ project, setProject, activeKey }: Props) 
             items={suggestions.filter((s) => s.tier === tier)}
             level={project.explanationLevel}
             onAdd={addChord}
+            tuning={project.tuning}
+            capo={project.capo}
           />
         </div>
       ))}
@@ -91,7 +98,7 @@ export default function NextChordTab({ project, setProject, activeKey }: Props) 
           </select>
         </label>
       </div>
-      <SuggestionList items={noteChords} level={project.explanationLevel} onAdd={addChord} />
+      <SuggestionList items={noteChords} level={project.explanationLevel} onAdd={addChord} tuning={project.tuning} capo={project.capo} />
 
       <h2>Keep this bass note</h2>
       <div className="row">
@@ -102,7 +109,7 @@ export default function NextChordTab({ project, setProject, activeKey }: Props) 
           </select>
         </label>
       </div>
-      <SuggestionList items={bassChords} level={project.explanationLevel} onAdd={addChord} />
+      <SuggestionList items={bassChords} level={project.explanationLevel} onAdd={addChord} tuning={project.tuning} capo={project.capo} />
     </div>
   );
 }
